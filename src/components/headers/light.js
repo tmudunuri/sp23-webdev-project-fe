@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react"
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
+
+import { UserContext } from "../../context/UserContext"
 
 import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 
@@ -57,6 +60,23 @@ export const DesktopNavLinks = tw.nav`
 `;
 
 export default ({ roundedHeaderButton = false, logoLink, links, className, collapseBreakpointClass = "lg" }) => {
+
+  const [userContext, setUserContext] = useContext(UserContext)
+
+  const logoutHandler = () => {
+    fetch(process.env.REACT_APP_API_ENDPOINT + "users/logout", {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userContext.token}`,
+      },
+    }).then(async response => {
+      setUserContext(oldValues => {
+        return { ...oldValues, details: undefined, token: null }
+      })
+      window.localStorage.setItem("logout", Date.now())
+    })
+  }
   /*
    * This header component accepts an optionals "links" prop that specifies the links to render in the navbar.
    * This links props should be an array of "NavLinks" components which is exported from this file.
@@ -76,11 +96,31 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
       <NavLink href="/#">Blog</NavLink>
       <NavLink href="/#">Pricing</NavLink>
       <NavLink href="/#">Contact Us</NavLink>
-      <NavLink href="/#" tw="lg:ml-12!">
-        Login
-      </NavLink>
-      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`}href="/#">Sign Up</PrimaryLink>
-    </NavLinks>
+      {userContext.token !== null &&
+        <Link to="/profile">
+          <NavLink tw="lg:ml-12!">
+            Profile
+          </NavLink>
+        </Link>
+      }
+      {userContext.token !== null &&
+        <PrimaryLink tw="lg:ml-12!" onClick={logoutHandler}>
+          Logout
+        </PrimaryLink>
+      }
+      {userContext.token === null &&
+        <>
+          <Link to="/login">
+            <NavLink tw="lg:ml-12!">
+              Login
+            </NavLink>
+          </Link>
+          <Link to="/register" style={{ marginTop: "1rem" }}>
+            <PrimaryLink css={roundedHeaderButton && tw`rounded-full`} >Sign Up</PrimaryLink>
+          </Link>
+        </>
+      }
+    </NavLinks >
   ];
 
   const { showNavLinks, animation, toggleNavbar } = useAnimatedNavToggler();
@@ -89,7 +129,7 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
   const defaultLogoLink = (
     <LogoLink href="/">
       <img src={logo} alt="logo" />
-      Treact
+      BreweryHub
     </LogoLink>
   );
 

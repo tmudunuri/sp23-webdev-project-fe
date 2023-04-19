@@ -92,7 +92,9 @@ import RestaurantLandingPage from "demos/RestaurantLandingPage.js";
 
 /* Inner Pages */
 import LoginPage from "pages/Login.js";
+import LogoutPage from "pages/Logout.js";
 import SignupPage from "pages/Signup.js";
+import ProfilePage from "pages/Profile.js";
 // import PricingPage from "pages/Pricing.js";
 // import AboutUsPage from "pages/AboutUs.js";
 // import ContactUsPage from "pages/ContactUs.js";
@@ -113,6 +115,30 @@ export default function App() {
   // return <AnimationRevealPage disabled>xxxxxxxxxx</AnimationRevealPage>;
   const [userContext, setUserContext] = useContext(UserContext);
 
+  const verifyUser = useCallback(() => {
+    fetch(process.env.REACT_APP_API_ENDPOINT + "users/refreshToken", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    }).then(async response => {
+      if (response.ok) {
+        const data = await response.json()
+        setUserContext(oldValues => {
+          return { ...oldValues, token: data.token }
+        })
+      } else {
+        setUserContext(oldValues => {
+          return { ...oldValues, token: null }
+        })
+      }
+      // call refreshToken every 5 minutes to renew the authentication token.
+      setTimeout(verifyUser, 5 * 60 * 1000)
+    })
+  }, [setUserContext])
+
+  useEffect(() => {
+    verifyUser()
+  }, [verifyUser])
 
   return (
     <>
@@ -125,7 +151,9 @@ export default function App() {
           <Route path="/doc" element={<MainLandingPage />} />
           <Route path="/" element={<RestaurantLandingPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
           <Route path="/register" element={<SignupPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </Router>
     </>

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext"
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { Container as ContainerBase } from "components/misc/Layouts";
@@ -10,6 +11,7 @@ import logo from "images/logo.svg";
 import googleIconImageSrc from "images/google-icon.png";
 import twitterIconImageSrc from "images/twitter-icon.png";
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
+
 
 
 
@@ -79,6 +81,7 @@ export default ({
   registerUrl = "/register",
 
 }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
@@ -114,6 +117,7 @@ export default ({
           setUserContext(oldValues => {
             return { ...oldValues, token: data.token }
           })
+          navigate("/profile");
         }
       })
       .catch(error => {
@@ -171,9 +175,9 @@ export default ({
               </p> */}
                   <p tw="mt-8 text-sm text-gray-600 text-center">
                     Dont have an account?{" "}
-                    <a href={registerUrl} tw="border-b border-gray-500 border-dotted">
+                    <Link to={registerUrl} tw="border-b border-gray-500 border-dotted">
                       Sign Up
-                    </a>
+                    </Link>
                   </p>
                 </FormContainer>
               </MainContent>
