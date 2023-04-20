@@ -110,6 +110,7 @@ import { useCallback, useContext, useEffect, useState } from "react"
 import { UserContext } from "./context/UserContext"
 import HomePage from "pages/HomePage";
 import SearchPage from "pages/SearchPage";
+import BreweryPage from "components/cards/BreweryPage";
 
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
@@ -156,6 +157,7 @@ export default function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/:uid" element={<ProfilePage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/brewery/:bid" element={<BreweryPage />} />
         </Routes>
       </Router>
     </>

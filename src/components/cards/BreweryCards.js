@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -204,37 +205,39 @@ export default ({
                     >
                         {breweriesData[tabKey].map((card, index) => (
                             <CardContainer key={index}>
-                                <Card className="group" href={card.name} initial="rest" whileHover="hover" animate="rest">
-                                    <CardImageContainer imageSrc={card.image}>
-                                        <CardRatingContainer>
-                                            {/* <CardRating>
+                                <Link to={"/brewery/" + card.id}>
+                                    <Card className="group" href={card.name} initial="rest" whileHover="hover" animate="rest">
+                                        <CardImageContainer imageSrc={card.image}>
+                                            <CardRatingContainer>
+                                                {/* <CardRating>
                                                 <StarIcon />
                                                 {card.name}
                                             </CardRating> */}
-                                            <CardReview>{getFormattedPhoneNumber(card.phone)}</CardReview>
-                                        </CardRatingContainer>
-                                        <CardHoverOverlay
-                                            variants={{
-                                                hover: {
-                                                    opacity: 1,
-                                                    height: "auto"
-                                                },
-                                                rest: {
-                                                    opacity: 0,
-                                                    height: 0
-                                                }
-                                            }}
-                                            transition={{ duration: 0.3 }}
-                                        >
-                                            <CardButton>Visit</CardButton>
-                                        </CardHoverOverlay>
-                                    </CardImageContainer>
-                                    <CardText>
-                                        <CardTitle>{card.city}</CardTitle>
-                                        <CardContent>{card.street}</CardContent>
-                                        <CardPrice>{card.name}</CardPrice>
-                                    </CardText>
-                                </Card>
+                                                <CardReview>{getFormattedPhoneNumber(card.phone)}</CardReview>
+                                            </CardRatingContainer>
+                                            <CardHoverOverlay
+                                                variants={{
+                                                    hover: {
+                                                        opacity: 1,
+                                                        height: "auto"
+                                                    },
+                                                    rest: {
+                                                        opacity: 0,
+                                                        height: 0
+                                                    }
+                                                }}
+                                                transition={{ duration: 0.3 }}
+                                            >
+                                                <CardButton>Visit</CardButton>
+                                            </CardHoverOverlay>
+                                        </CardImageContainer>
+                                        <CardText>
+                                            <CardPrice>{card.name}</CardPrice>
+                                            <CardTitle>{card.city}</CardTitle>
+                                            <CardContent>{card.street}</CardContent>
+                                        </CardText>
+                                    </Card>
+                                </Link>
                             </CardContainer>
                         ))}
                     </TabContent>

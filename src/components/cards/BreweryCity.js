@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -10,6 +11,8 @@ import { ReactComponent as LocationIcon } from "feather-icons/dist/icons/map-pin
 import { ReactComponent as StarIcon } from "feather-icons/dist/icons/star.svg";
 import { ReactComponent as ChevronLeftIcon } from "feather-icons/dist/icons/chevron-left.svg";
 import { ReactComponent as ChevronRightIcon } from "feather-icons/dist/icons/chevron-right.svg";
+import { ReactComponent as PhoneIcon } from "feather-icons/dist/icons/phone.svg";
+import { ReactComponent as MapIcon } from "feather-icons/dist/icons/map.svg";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-16 lg:py-20`;
@@ -218,38 +221,40 @@ export default () => {
                 <CardSlider ref={setSliderRef} {...sliderSettings}>
                     {breweriesByCity.map((card, index) => (
                         <Card key={index}>
-                            <CardImage imageSrc={card.image} />
-                            <TextInfo>
-                                <TitleReviewContainer>
-                                    <Title>{card.name}</Title>
-                                    {/* <RatingsInfo>
+                            <Link to={"/brewery/" + card.id}>
+                                <CardImage imageSrc={card.image} />
+                                <TextInfo>
+                                    <TitleReviewContainer>
+                                        <Title>{card.name}</Title>
+                                        {/* <RatingsInfo>
                                         <StarIcon />
                                         <Rating>{card.name}</Rating>
                                     </RatingsInfo> */}
-                                </TitleReviewContainer>
-                                <SecondaryInfoContainer>
-                                    <IconWithText>
-                                        <IconContainer>
-                                            <ChevronRightIcon />
-                                        </IconContainer>
-                                        <Text>{card.city + ", " + card.state}</Text>
-                                    </IconWithText>
-                                    <IconWithText>
-                                        <IconContainer>
-                                            <ChevronLeftIcon />
-                                        </IconContainer>
-                                        <Text as="a" href={"tel:" + card.phone} target="_blank">{getFormattedPhoneNumber(card.phone)}</Text>
-                                    </IconWithText>
-                                </SecondaryInfoContainer>
-                                <SecondaryInfoContainer>
-                                    <IconWithText>
-                                        <IconContainer>
-                                            <LocationIcon />
-                                        </IconContainer>
-                                        <Text as="a" href={handleDirections(card.latitude, card.longitude)} target="_blank" >{card.street}</Text>
-                                    </IconWithText>
-                                </SecondaryInfoContainer>
-                            </TextInfo>
+                                    </TitleReviewContainer>
+                                    <SecondaryInfoContainer>
+                                        <IconWithText>
+                                            <IconContainer>
+                                                <MapIcon />
+                                            </IconContainer>
+                                            <Text>{card.city + ", " + card.state}</Text>
+                                        </IconWithText>
+                                        <IconWithText>
+                                            <IconContainer>
+                                                <PhoneIcon />
+                                            </IconContainer>
+                                            <Text as="a" href={"tel:" + card.phone} target="_blank">{getFormattedPhoneNumber(card.phone)}</Text>
+                                        </IconWithText>
+                                    </SecondaryInfoContainer>
+                                    <SecondaryInfoContainer>
+                                        <IconWithText>
+                                            <IconContainer>
+                                                <LocationIcon />
+                                            </IconContainer>
+                                            <Text as="a" href={handleDirections(card.latitude, card.longitude)} target="_blank" >{card.street}</Text>
+                                        </IconWithText>
+                                    </SecondaryInfoContainer>
+                                </TextInfo>
+                            </Link>
                             <PrimaryButton as="a" href={card.website_url} target="_blank">Visit Website</PrimaryButton>
                         </Card>
                     ))}

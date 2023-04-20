@@ -92,6 +92,11 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
    */
   const defaultLinks = [
     <NavLinks key={1}>
+      <Link to="/">
+        <NavLink tw="lg:ml-12!">
+          Home
+        </NavLink>
+      </Link>
       <Link to="/search">
         <NavLink tw="lg:ml-12!">
           Search
@@ -102,11 +107,11 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
       <NavLink href="/#">Pricing</NavLink>
       <NavLink href="/#">Contact Us</NavLink> */}
       {userContext.token !== null &&
-        <Link to="/profile">
-          <NavLink tw="lg:ml-12!">
+        // <Link>
+          <NavLink href="/profile" tw="lg:ml-12!">
             Profile
           </NavLink>
-        </Link>
+        // </Link>
       }
       {userContext.token !== null &&
         <PrimaryLink tw="lg:ml-12!" onClick={logoutHandler}>
