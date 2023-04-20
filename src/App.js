@@ -92,7 +92,6 @@ import RestaurantLandingPage from "demos/RestaurantLandingPage.js";
 
 /* Inner Pages */
 import LoginPage from "pages/Login.js";
-import LogoutPage from "pages/Logout.js";
 import SignupPage from "pages/Signup.js";
 import ProfilePage from "pages/Profile.js";
 // import PricingPage from "pages/Pricing.js";
@@ -109,6 +108,8 @@ import ThankYouPage from "ThankYouPage.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useCallback, useContext, useEffect, useState } from "react"
 import { UserContext } from "./context/UserContext"
+import HomePage from "pages/HomePage";
+import SearchPage from "pages/SearchPage";
 
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
@@ -149,11 +150,12 @@ export default function App() {
           <Route path="/components/:type/:name" element={<ComponentRenderer />} />
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/doc" element={<MainLandingPage />} />
-          <Route path="/" element={<RestaurantLandingPage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/logout" element={<LogoutPage />} />
           <Route path="/register" element={<SignupPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/:uid" element={<ProfilePage />} />
+          <Route path="/search" element={<SearchPage />} />
         </Routes>
       </Router>
     </>

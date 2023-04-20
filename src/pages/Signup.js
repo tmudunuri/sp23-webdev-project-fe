@@ -60,6 +60,13 @@ export default ({
   logoLinkUrl = "#",
   illustrationImageSrc = illustration,
   headingText = "Sign Up For BreweryHub",
+  photos = ["https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&fit=facearea&facepad=2.95&w=512&h=512&q=80",
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&fit=facearea&facepad=2.95&w=512&h=512&q=80",
+    "https://images.unsplash.com/photo-1517070208541-6ddc4d3efbcb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&fit=facearea&facepad=2.95&w=512&h=512&q=80",
+    "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&fit=facearea&facepad=2.95&w=512&h=512&q=80",
+    "https://images.unsplash.com/photo-1546820389-44d77e1f3b31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&fit=facearea&facepad=3.45&w=512&h=512&q=80",
+    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&fit=facearea&facepad=3.45&w=512&h=512&q=80",
+  ],
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
@@ -83,9 +90,10 @@ export default ({
   const [error, setError] = useState("")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [role, setRole] = useState("user")
+  const [photo, setPhoto] = useState(photos[Math.floor(Math.random() * photos.length)])
   const [userContext, setUserContext] = useContext(UserContext)
 
   const formSubmitHandler = e => {
@@ -99,7 +107,7 @@ export default ({
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firstName, lastName, username: email, password, role }),
+      body: JSON.stringify({ firstName, lastName, username, password, role, photo }),
     })
       .then(async response => {
         setIsSubmitting(false)
@@ -107,7 +115,7 @@ export default ({
           if (response.status === 400) {
             setError("Please fill all the fields correctly!")
           } else if (response.status === 401) {
-            setError("Invalid email and password combination.")
+            setError("Invalid username and password combination.")
           } else if (response.status === 500) {
             console.log(response)
             const data = await response.json()
@@ -171,11 +179,11 @@ export default ({
                       required
                       onChange={e => setLastName(e.target.value)} />
                     <Input
-                      type="email"
-                      placeholder="Email"
-                      value={email}
+                      type="string"
+                      placeholder="Username"
+                      value={username}
                       required
-                      onChange={e => setEmail(e.target.value)} />
+                      onChange={e => setUsername(e.target.value)} />
                     <Input
                       type="password"
                       placeholder="Password"

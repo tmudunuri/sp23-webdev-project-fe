@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts";
 import tw from "twin.macro";
@@ -82,11 +83,16 @@ export default ({
     getPlaceholderPost()
   ]
 }) => {
+  // const { uid } = useParams();
+  // console.log(uid);
   const [visible, setVisible] = useState(7);
   const onLoadMoreClick = () => {
     setVisible(v => v + 6);
   };
-  
+
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const [uid, setUid] = useState(searchParams.get("uid"))
+
   return (
     <AnimationRevealPage>
       <Header />

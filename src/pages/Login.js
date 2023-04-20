@@ -82,7 +82,7 @@ export default ({
 
 }) => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -100,7 +100,7 @@ export default ({
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: email, password }),
+      body: JSON.stringify({ username, password }),
     })
       .then(async response => {
         setIsSubmitting(false)
@@ -108,7 +108,7 @@ export default ({
           if (response.status === 400) {
             setError("Please fill all the fields correctly!")
           } else if (response.status === 401) {
-            setError("Invalid email and password combination.")
+            setError("Invalid username and password combination.")
           } else {
             setError(genericErrorMessage)
           }
@@ -117,7 +117,7 @@ export default ({
           setUserContext(oldValues => {
             return { ...oldValues, token: data.token }
           })
-          navigate("/profile");
+          navigate("/");
         }
       })
       .catch(error => {
@@ -153,10 +153,10 @@ export default ({
               </DividerTextContainer> */}
                   <Form onSubmit={formSubmitHandler} >
                     <Input
-                      type="email"
-                      placeholder="Email"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)} />
+                      type="string"
+                      placeholder="Username"
+                      value={username}
+                      onChange={e => setUsername(e.target.value)} />
                     <Input
                       type="password"
                       placeholder="Password"
