@@ -34,7 +34,6 @@ const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
 const Textarea = styled(Input).attrs({ as: "textarea" })`
   ${tw`h-24`}
 `
-// const Label = tw.label`text-center font-medium text-sm`;
 
 const Cards = tw.div`flex flex-wrap flex-row justify-center sm:max-w-2xl lg:max-w-5xl mx-auto`
 const Card = tw.div`mt-1 w-full sm:w-1/2 lg:w-1/3 flex flex-col items-center`
@@ -101,6 +100,7 @@ export default ({
   const [userContext, setUserContext] = useContext(UserContext)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
+  const [status, setStatus] = useState("")
   const [loaderror, setLoaderror] = useState("")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -148,7 +148,7 @@ export default ({
           setUserContext(oldValues => {
             return { ...oldValues, token: data.token }
           })
-          alert("Profile Updated");
+          setStatus("Profile Updated")
         }
       })
       .catch(error => {
@@ -179,7 +179,7 @@ export default ({
         if (uid === undefined) {
           setUsername(data.username)
           setEmail(data.email)
-          setPhone(data.phone)
+          setPhone(getFormattedPhoneNumber(data.phone))
           setCity(data.city)
           setUserContext(oldValues => {
             return { ...oldValues, details: data }
@@ -291,9 +291,9 @@ export default ({
                   <Input
                     type="tel"
                     name="phone"
-                    placeholder={userContext.details.phone || "Your Phone (XXX-XXX-XXXX)"}
+                    placeholder={getFormattedPhoneNumber(userContext.details.phone) || "Your Phone (XXX-XXX-XXXX)"}
                     value={phone}
-                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                    pattern="[0-9]{10}"
                     onChange={e => setPhone(e.target.value)} />
 
                   <Label htmlFor="bio">Bio</Label>
@@ -340,6 +340,7 @@ export default ({
                   <SubmitButton disabled={isSubmitting} type="submit">
                     <span className="text">{`${isSubmitting ? "Updating Profile" : "Update Profile"}`}</span>
                   </SubmitButton>
+                  {status && <p tw="mt-6 text-sm text-green-500 text-center">{status}</p>}
                   {error && <p tw="mt-6 text-xs text-red-500 text-center">{error}</p>}
                 </Form>
               </TextContent>
@@ -349,4 +350,14 @@ export default ({
       }
     </Container>
   );
+};
+
+const getFormattedPhoneNumber = (phone) => {
+  var cleaned = ('' + phone).replace(/\D/g, '');
+  var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+  if (match) {
+    var intlCode = match[1] ? '+1 ' : '';
+    return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+  }
+  return null;
 };

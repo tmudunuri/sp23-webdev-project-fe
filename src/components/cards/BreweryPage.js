@@ -304,54 +304,60 @@ export default ({ textOnLeft = false }) => {
                                         </Steps>
                                     </TextColumn>
                                 </TwoColumn>
-                                <Statistics>
 
-                                    <Statistic>
-                                        <LikeIcon
-                                            color="red"
-                                            width="42" height="42"
-                                            fill={liked ? "red" : "white"}
-                                            onClick={setLike}
-                                            disabled={isSubmitting}
-                                        />
-                                        <Value>{breweryStats && breweryStats.likes || 0}</Value>
-                                        <Key>Likes</Key>
-                                    </Statistic>
-                                    <Statistic>
-                                        <DislikeIcon
-                                            color={disliked ? "white" : "black"}
-                                            width="42" height="42"
-                                            fill={disliked ? "blue" : "white"}
-                                            onClick={setDislike}
-                                            disabled={isSubmitting} />
-                                        <Value>{breweryStats && breweryStats.dislikes || 0}</Value>
-                                        <Key>Disikes</Key>
-                                    </Statistic>
-                                    <Statistic>
-                                        <VisitsIcon
-                                            color={visited ? "white" : "black"}
-                                            width="42" height="42"
-                                            fill={visited ? "green" : "white"}
-                                            onClick={setVisit}
-                                            disabled={isSubmitting} />
-                                        <Value>{breweryStats && breweryStats.visits || 0}</Value>
-                                        <Key>Visits</Key>
-                                    </Statistic>
-                                    <Statistic>
-                                        <ReviewsIcon
-                                            color="purple"
-                                            width="42" height="42" />
-                                        <Value>0</Value>
-                                        <Key>Reviews</Key>
-                                    </Statistic>
+                                {userContext.token != null &&
+                                    <Statistics>
 
-                                </Statistics>
+                                        <Statistic>
+                                            <LikeIcon
+                                                color="red"
+                                                width="42" height="42"
+                                                fill={liked ? "red" : "white"}
+                                                onClick={setLike}
+                                                disabled={isSubmitting}
+                                            />
+                                            <Value>{breweryStats && breweryStats.likes || 0}</Value>
+                                            <Key>Likes</Key>
+                                        </Statistic>
+                                        <Statistic>
+                                            <DislikeIcon
+                                                color={disliked ? "white" : "black"}
+                                                width="42" height="42"
+                                                fill={disliked ? "blue" : "white"}
+                                                onClick={setDislike}
+                                                disabled={isSubmitting} />
+                                            <Value>{breweryStats && breweryStats.dislikes || 0}</Value>
+                                            <Key>Disikes</Key>
+                                        </Statistic>
+                                        <Statistic>
+                                            <VisitsIcon
+                                                color={visited ? "white" : "black"}
+                                                width="42" height="42"
+                                                fill={visited ? "green" : "white"}
+                                                onClick={setVisit}
+                                                disabled={isSubmitting} />
+                                            <Value>{breweryStats && breweryStats.visits || 0}</Value>
+                                            <Key>Visits</Key>
+                                        </Statistic>
+                                        <Statistic>
+                                            <ReviewsIcon
+                                                color="purple"
+                                                width="42" height="42" />
+                                            <Value>{breweryStats && breweryStats.reviewsCount || 0}</Value>
+                                            <Key>Reviews</Key>
+                                        </Statistic>
+
+                                    </Statistics>
+                                }
+
                             </TextContent>
                         </TextColumn>
                     </TwoColumn>
                 }
 
-                <ReviewsCard />
+                <ReviewsCard
+                    bid={bid}
+                />
 
                 <DecoratorBlob1 />
                 <DecoratorBlob2 />

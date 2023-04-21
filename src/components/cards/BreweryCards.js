@@ -104,7 +104,7 @@ export default ({
                 const data = await response.json()
                 data.forEach(element => {
                     element.image = images[Math.floor(Math.random() * images.length)];
-                    microBreweries.push(element);
+                    setMicroBreweries(microBreweries => [...microBreweries, element]);
                 });
             } else {
                 alert("Could not fetch Breweries")
@@ -122,7 +122,7 @@ export default ({
                 const data = await response.json()
                 data.forEach(element => {
                     element.image = images[Math.floor(Math.random() * images.length)];
-                    brewPubs.push(element);
+                    setBrewpubs(brewPubs => [...brewPubs, element]);
                 });
             } else {
                 alert("Could not fetch Breweries")
@@ -140,7 +140,7 @@ export default ({
                 const data = await response.json()
                 data.forEach(element => {
                     element.image = images[Math.floor(Math.random() * images.length)];
-                    largeBreweries.push(element);
+                    setLargeBreweries(largeBreweries => [...largeBreweries, element]);
                 });
             } else {
                 alert("Could not fetch Breweries")
@@ -158,7 +158,7 @@ export default ({
                 const data = await response.json()
                 data.forEach(element => {
                     element.image = images[Math.floor(Math.random() * images.length)];
-                    bars.push(element);
+                    setBars(bars => [...bars, element]);
                 });
             } else {
                 alert("Could not fetch Breweries")

@@ -202,7 +202,7 @@ export default () => {
         if (!userContext.details && userContext.token) {
             fetchUserDetails()
         }
-    })
+    }, [userContext.details])
 
     useEffect(() => {
         fetchBreweriesByCity();
