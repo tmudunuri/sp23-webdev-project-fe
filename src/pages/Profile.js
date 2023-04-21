@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
+import ProfileBreweryCards from "components/cards/ProfileBreweryCards";
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -13,6 +14,7 @@ import { PrimaryButton } from "components/misc/Buttons";
 import ProfileCard from "components/cards/ProfileCard";
 
 const HeadingRow = tw.div`flex`;
+const HighlightedText = tw.span`bg-primary-500 text-gray-100 px-4 transform -skew-x-12 inline-block`;
 const Heading = tw(SectionHeading)`text-gray-900`;
 const Posts = tw.div`mt-6 sm:-mr-8 flex flex-wrap`;
 const PostContainer = styled.div`
@@ -102,31 +104,18 @@ export default ({
             <Heading>{headingText}</Heading>
           </HeadingRow>
           <ProfileCard>
-
           </ProfileCard>
-          <Posts>
-            {posts.slice(0, visible).map((post, index) => (
-              <PostContainer key={index} featured={post.featured}>
-                <Post className="group" as="a" href={post.url}>
-                  <Image imageSrc={post.imageSrc} />
-                  <Info>
-                    <Category>{post.category}</Category>
-                    <CreationDate>{post.date}</CreationDate>
-                    <Title>{post.title}</Title>
-                    {post.featured && post.description && <Description>{post.description}</Description>}
-                  </Info>
-                </Post>
-              </PostContainer>
-            ))}
-          </Posts>
-          {visible < posts.length && (
-            <ButtonContainer>
-              <LoadMoreButton onClick={onLoadMoreClick}>Load More</LoadMoreButton>
-            </ButtonContainer>
-          )}
+
+          <ProfileBreweryCards
+            heading={
+              <>
+                Some <HighlightedText>Highlights</HighlightedText>
+              </>
+            }
+          />
+
         </ContentWithPaddingXl>
       </Container>
-      <Footer />
     </AnimationRevealPage>
   );
 };

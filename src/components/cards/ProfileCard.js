@@ -117,6 +117,7 @@ export default ({
     e.preventDefault()
     setIsSubmitting(true)
     setError("")
+    setStatus("")
 
     const genericErrorMessage = "Something went wrong! Please try again later."
     fetch(process.env.REACT_APP_API_ENDPOINT + "users/profile", {
@@ -250,7 +251,6 @@ export default ({
           {userContext.details != null &&
             <TextColumn textOnLeft={textOnLeft}>
               <TextContent>
-                {error && <p tw="mt-6 text-xs text-red-500 text-center">{error}</p>}
                 {/* {subheading && <Subheading>{subheading}</Subheading>}
             <Heading>{heading}</Heading>
             {description && <Description>{description}</Description>} */}
@@ -293,7 +293,6 @@ export default ({
                     name="phone"
                     placeholder={getFormattedPhoneNumber(userContext.details.phone) || "Your Phone (XXX-XXX-XXXX)"}
                     value={phone}
-                    pattern="[0-9]{10}"
                     onChange={e => setPhone(e.target.value)} />
 
                   <Label htmlFor="bio">Bio</Label>

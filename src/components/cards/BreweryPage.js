@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts.js";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading } from "components/misc/Headings.js";
+import { PrimaryButton } from "components/misc/Buttons";
 
 import { ReactComponent as PhoneIcon } from "feather-icons/dist/icons/phone-call.svg";
 import { ReactComponent as MapIcon } from "feather-icons/dist/icons/map.svg";
@@ -19,6 +20,8 @@ import { ReactComponent as LikeIcon } from "feather-icons/dist/icons/heart.svg";
 import { ReactComponent as DislikeIcon } from "feather-icons/dist/icons/thumbs-down.svg";
 import { ReactComponent as ReviewsIcon } from "feather-icons/dist/icons/message-circle.svg";
 import { ReactComponent as VisitsIcon } from "feather-icons/dist/icons/check-circle.svg";
+
+import { breweryImages } from "helpers/imageSources";
 
 
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
@@ -82,16 +85,7 @@ const Statistic = tw.div`text-lg sm:text-2xl lg:text-3xl w-1/2 mt-4 lg:mt-10 tex
 const Value = tw.div`font-bold text-primary-500`
 const Key = tw.div`font-medium text-gray-700`
 
-const images = ["https://images.unsplash.com/photo-1577670772839-befb49f0bee5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-    "https://images.unsplash.com/photo-1566467021572-37fbefe8fcb2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-    "https://images.unsplash.com/photo-1570562180924-039327605190?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-    "https://images.unsplash.com/photo-1464047736614-af63643285bf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-    "https://images.unsplash.com/photo-1438557068880-c5f474830377?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1473&q=80",
-    "https://images.unsplash.com/photo-1545140912-7d6443bd98b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=663&q=80",
-    "https://images.unsplash.com/photo-1533242553289-5ed0b2bc5a74?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80",
-    "https://images.unsplash.com/photo-1569937728169-55804de260bd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=683&q=80",
-    "https://images.unsplash.com/photo-1542634093-e0198d4d1e46?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-]
+const OwnButton = tw(PrimaryButton)`mt-16 mx-auto`;
 
 export default ({ textOnLeft = false }) => {
     const { bid } = useParams();
@@ -101,6 +95,8 @@ export default ({ textOnLeft = false }) => {
     const [liked, setLiked] = useState(false);
     const [disliked, setDisliked] = useState(false);
     const [visited, setVisited] = useState(false);
+    const [owned, setOwned] = useState(false);
+    const [userRole, setUserRole] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState("")
 
@@ -114,7 +110,7 @@ export default ({ textOnLeft = false }) => {
             setBrewery(null)
             if (response.ok) {
                 const data = await response.json()
-                data.image = images[Math.floor(Math.random() * images.length)];
+                data.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
                 setBrewery(data);
             } else {
                 setError("Could not Find Brewery")
@@ -141,6 +137,8 @@ export default ({ textOnLeft = false }) => {
                 setLiked(data.likedByUser)
                 setDisliked(data.dislikedByUser)
                 setVisited(data.visitedByUser)
+                setOwned(data.ownedByUser)
+                setUserRole(data.userRole)
             }
         }).catch(error => {
             setError("Could not Find Brewery")
@@ -220,6 +218,32 @@ export default ({ textOnLeft = false }) => {
             if (response.ok) {
                 const data = await response.json()
                 setVisited(data.visited)
+            } else {
+                alert("Could not find Brewery")
+            }
+        })
+    }
+
+    const setOwn = e => {
+        e.preventDefault()
+        setIsSubmitting(true)
+        setError("")
+
+        let endpoint = "breweries/own";
+        fetch(process.env.REACT_APP_API_ENDPOINT + endpoint, {
+            method: "PUT",
+            credentials: "include",
+            // Pass authentication token as bearer token in header
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userContext.token}`,
+            },
+            body: JSON.stringify({ bid, owned }),
+        }).then(async response => {
+            setIsSubmitting(false)
+            if (response.ok) {
+                const data = await response.json()
+                setOwned(data.owned)
             } else {
                 alert("Could not find Brewery")
             }
@@ -349,7 +373,9 @@ export default ({ textOnLeft = false }) => {
 
                                     </Statistics>
                                 }
-
+                                {userRole == 'admin' &&
+                                    <OwnButton onClick={setOwn}>{owned ? "Sell" : "Own"}</OwnButton>
+                                }
                             </TextContent>
                         </TextColumn>
                     </TwoColumn>
@@ -357,6 +383,7 @@ export default ({ textOnLeft = false }) => {
 
                 <ReviewsCard
                     bid={bid}
+                    userRole={userRole}
                 />
 
                 <DecoratorBlob1 />

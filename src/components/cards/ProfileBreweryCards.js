@@ -1,4 +1,5 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useContext } from "react";
+import { UserContext } from "../../context/UserContext"
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
@@ -8,10 +9,11 @@ import { Container, ContentWithPaddingXl } from "components/misc/Layouts.js";
 import { SectionHeading } from "components/misc/Headings.js";
 import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import { ReactComponent as StarIcon } from "images/star-icon.svg";
-import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
-import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
 
 import { breweryImages } from "helpers/imageSources";
+
+import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
+import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
 
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Header = tw(SectionHeading)``;
@@ -70,97 +72,141 @@ export default ({
      * To see what attributes are configurable of each object inside this array see the example above for "Starters".
      */
 
-    const [microBreweries, setMicroBreweries] = useState([]);
-    const [brewPubs, setBrewpubs] = useState([]);
-    const [largeBreweries, setLargeBreweries] = useState([]);
-    const [bars, setBars] = useState([]);
+    const [userContext, setUserContext] = useContext(UserContext);
+
+    const [likedBreweries, setLikedBreweries] = useState([]);
+    const [dislikedBreweries, setDislikedBreweries] = useState([]);
+    const [visitedBreweries, seVisitedBreweries] = useState([]);
+    const [ownedBreweries, setOwnedBreweries] = useState([]);
+
+    const [role, setRole] = useState([]);
 
     const breweriesData = {
-        Micro: getRandomCards(microBreweries),
-        Pubs: getRandomCards(brewPubs),
-        Large: getRandomCards(largeBreweries),
-        Bars: getRandomCards(bars)
+        Liked: getRandomCards(likedBreweries),
+        Disliked: getRandomCards(dislikedBreweries),
+        Visited: getRandomCards(visitedBreweries),
+        Owned: getRandomCards(ownedBreweries)
     }
     const tabsKeys = Object.keys(breweriesData);
     const [activeTab, setActiveTab] = useState(tabsKeys[0]);
+    const [error, setError] = useState("")
 
-    const fetchBreweriesByType = useCallback(() => {
-        let endpoint = "?by_type=micro&per_page=12";
-        fetch("https://api.openbrewerydb.org/v1/breweries" + endpoint, {
+    const fetchUserDetails = useCallback(() => {
+        let endpoint = "users/profile";
+        fetch(process.env.REACT_APP_API_ENDPOINT + endpoint, {
             method: "GET",
+            credentials: "include",
+            // Pass authentication token as bearer token in header
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${userContext.token}`,
             },
         }).then(async response => {
             if (response.ok) {
                 const data = await response.json()
-                data.forEach(element => {
-                    element.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
-                    setMicroBreweries(microBreweries => [...microBreweries, element]);
-                });
-            } else {
-                alert("Could not fetch Breweries")
-            }
-        })
+                setRole(data.role);
 
-        endpoint = "?by_type=brewpub&per_page=12";
-        fetch("https://api.openbrewerydb.org/v1/breweries" + endpoint, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }).then(async response => {
-            if (response.ok) {
-                const data = await response.json()
-                data.forEach(element => {
-                    element.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
-                    setBrewpubs(brewPubs => [...brewPubs, element]);
-                });
-            } else {
-                alert("Could not fetch Breweries")
-            }
-        })
+                // likes
+                data.likes.forEach(element => {
+                    fetch("https://api.openbrewerydb.org/v1/breweries/" + element, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }).then(async response => {
+                        if (response.ok) {
+                            const data = await response.json()
+                            data.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
+                            setLikedBreweries(likedBreweries => [...likedBreweries, data]);
 
-        endpoint = "?by_type=large&per_page=12";
-        fetch("https://api.openbrewerydb.org/v1/breweries" + endpoint, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }).then(async response => {
-            if (response.ok) {
-                const data = await response.json()
-                data.forEach(element => {
-                    element.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
-                    setLargeBreweries(largeBreweries => [...largeBreweries, element]);
+                        } else {
+                            alert("Could not fetch Breweries")
+                        }
+                    })
                 });
-            } else {
-                alert("Could not fetch Breweries")
-            }
-        })
 
-        endpoint = "?by_type=bar&per_page=12";
-        fetch("https://api.openbrewerydb.org/v1/breweries" + endpoint, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }).then(async response => {
-            if (response.ok) {
-                const data = await response.json()
-                data.forEach(element => {
-                    element.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
-                    setBars(bars => [...bars, element]);
+                // dislikes
+                data.dislikes.forEach(element => {
+                    fetch("https://api.openbrewerydb.org/v1/breweries/" + element, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }).then(async response => {
+                        if (response.ok) {
+                            const data = await response.json()
+                            data.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
+                            setDislikedBreweries(dislikedBreweries => [...dislikedBreweries, data]);
+
+                        } else {
+                            alert("Could not fetch Breweries")
+                        }
+                    })
                 });
+
+                // visited
+                data.visits.forEach(element => {
+                    fetch("https://api.openbrewerydb.org/v1/breweries/" + element, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }).then(async response => {
+                        if (response.ok) {
+                            const data = await response.json()
+                            data.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
+                            seVisitedBreweries(visitedBreweries => [...visitedBreweries, data]);
+
+                        } else {
+                            alert("Could not fetch Breweries")
+                        }
+                    })
+                });
+
+                // owned
+                data.owns.forEach(element => {
+                    fetch("https://api.openbrewerydb.org/v1/breweries/" + element, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }).then(async response => {
+                        if (response.ok) {
+                            const data = await response.json()
+                            data.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
+                            setOwnedBreweries(ownedBreweries => [...ownedBreweries, data]);
+
+                        } else {
+                            alert("Could not fetch Breweries")
+                        }
+                    })
+                });
+
+                setUserContext(oldValues => {
+                    return { ...oldValues, details: data }
+                })
             } else {
-                alert("Could not fetch Breweries")
+                if (response.status === 401) {
+                    // Edge case: when the token has expired.
+                    // This could happen if the refreshToken calls have failed due to network error or
+                    // User has had the tab open from previous day and tries to click on the Fetch button
+                    window.location.reload()
+                } else if (response.status == 404) {
+                    setError("User not found")
+                } else {
+                    setUserContext(oldValues => {
+                        return { ...oldValues, details: null }
+                    })
+                }
             }
         })
-    }, [])
+    }, [setUserContext, userContext.token])
 
     useEffect(() => {
-        fetchBreweriesByType();
-    }, [])
+        if (!userContext.details && userContext.token) {
+            fetchUserDetails()
+        }
+    })
 
     return (
         <Container>

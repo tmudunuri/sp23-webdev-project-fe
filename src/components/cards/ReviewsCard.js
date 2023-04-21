@@ -12,6 +12,7 @@ import { ReactComponent as StarIconBase } from "images/star-icon.svg";
 import { ReactComponent as ArrowLeftIcon } from "images/arrow-left-3-icon.svg";
 import { ReactComponent as ArrowRightIcon } from "images/arrow-right-3-icon.svg";
 import { ReactComponent as SubmitButtonIcon } from "feather-icons/dist/icons/send.svg";
+import { ReactComponent as DeleteIcon } from "feather-icons/dist/icons/trash.svg";
 
 const Row = tw.div`flex flex-col md:flex-row justify-between items-center`;
 const Column = tw.div`w-full max-w-md mx-auto md:max-w-none md:mx-0`;
@@ -20,6 +21,8 @@ const TextColumn = styled(Column)(props => [
     tw`md:w-7/12 xl:w-6/12 mt-16 md:mt-0`,
     props.textOnLeft ? tw`md:pr-12 lg:pr-16 md:order-first` : tw`md:pl-12 lg:pl-16 md:order-last`
 ]);
+
+const DeleteMarker = tw.span`mt-2 mx-auto`;
 
 const Image = styled.img(props => [
     props.imageRounded && tw`rounded`,
@@ -90,6 +93,7 @@ const Label = tw.label`mt-6 first:mt-6 py-6 focus:outline-none text-lg font-medi
 
 export default ({
     bid,
+    userRole,
     imageSrc = loveIllustrationImageSrc,
     imageRounded = true,
     imageBorder = false,
@@ -157,7 +161,32 @@ export default ({
                 setRating(1)
                 setRefresh(refresh + 1)
             } else {
-                alert("Could not review Brewery")
+                setError("Could not review Brewery")
+            }
+        })
+    }
+
+    const deleteReviewHandler = (bid, username) => {
+        setIsSubmitting(true)
+        setError("")
+
+        const genericErrorMessage = "Something went wrong! Please try again later."
+        fetch(process.env.REACT_APP_API_ENDPOINT + "breweries/review", {
+            method: "DELETE",
+            credentials: "include",
+            // Pass authentication token as bearer token in header
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userContext.token}`,
+            },
+            body: JSON.stringify({ bid, username }),
+        }).then(async response => {
+            setIsSubmitting(false)
+            if (response.ok) {
+                const data = await response.json()
+                setRefresh(refresh + 1)
+            } else {
+                setError("Failed. Only owners can delete reviews")
             }
         })
     }
@@ -221,7 +250,7 @@ export default ({
                                         <span className="text">{`${isSubmitting ? "Reviewing" : "Review"}`}</span>
                                     </SubmitButton>
                                 </Form>
-                                {error && <p tw="mt-6 text-xs text-red-500 text-center">{error}</p>}
+                                {error && <p tw="mt-6 text-sm text-red-500 text-center">{error}</p>}
                             </FormContainer>
                         }
                     </TextColumn>
@@ -235,6 +264,13 @@ export default ({
                                         ))}
                                     </StarsContainer>
                                     <TestimonialHeading>{review.title}</TestimonialHeading>
+
+                                    {userRole == 'admin' &&
+                                        <DeleteMarker onClick={() => deleteReviewHandler(review.bid, review.username)}>
+                                            <DeleteIcon color="red" />
+                                        </DeleteMarker>
+                                    }
+
                                     <Quote>{review.review}</Quote>
                                     <CustomerInfoAndControlsContainer>
                                         <a href={"/profile/" + review.username}>

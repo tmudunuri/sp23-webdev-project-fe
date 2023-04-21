@@ -12,6 +12,8 @@ import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
 import DesignIllustration from "../../images/design-illustration-2.svg";
 
+import { breweryImages } from "helpers/imageSources";
+
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Header = tw(SectionHeading)``;
 const TabsControl = tw.div`flex flex-wrap bg-gray-200 px-2 py-2 rounded leading-none mt-12 xl:mt-0`;
@@ -91,16 +93,6 @@ const IllustrationContainer = tw.div`flex justify-center lg:justify-end items-ce
 
 export default ({
     heading = "Checkout the Menu",
-    images = ["https://images.unsplash.com/photo-1577670772839-befb49f0bee5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-        "https://images.unsplash.com/photo-1566467021572-37fbefe8fcb2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-        "https://images.unsplash.com/photo-1570562180924-039327605190?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-        "https://images.unsplash.com/photo-1464047736614-af63643285bf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-        "https://images.unsplash.com/photo-1438557068880-c5f474830377?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1473&q=80",
-        "https://images.unsplash.com/photo-1545140912-7d6443bd98b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=663&q=80",
-        "https://images.unsplash.com/photo-1533242553289-5ed0b2bc5a74?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80",
-        "https://images.unsplash.com/photo-1569937728169-55804de260bd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=683&q=80",
-        "https://images.unsplash.com/photo-1542634093-e0198d4d1e46?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-    ]
 }) => {
     /*
      * To customize the tabs, pass in data using the `tabs` prop. It should be an object which contains the name of the tab
@@ -137,7 +129,7 @@ export default ({
             if (response.ok) {
                 const data = await response.json()
                 data.forEach(element => {
-                    element.image = images[Math.floor(Math.random() * images.length)];
+                    element.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
                     setBreweries(breweries => [...breweries, element]);
                 });
             } else {
@@ -159,7 +151,7 @@ export default ({
             if (response.ok) {
                 const data = await response.json()
                 data.forEach(element => {
-                    element.image = images[Math.floor(Math.random() * images.length)];
+                    element.image = breweryImages[Math.floor(Math.random() * breweryImages.length)];
                     setBreweries(breweries => [...breweries, element]);
                 });
             } else {
