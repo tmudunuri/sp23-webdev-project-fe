@@ -49,11 +49,20 @@ const CardContent = styled.div`
     ${tw`uppercase font-bold tracking-widest text-xs text-primary-500`}
   }
   .bio {
-    ${tw`text-center text-xs text-gray-400`}
+    ${tw`mb-4 text-center text-xs text-gray-400`}
   }
   .name {
-    ${tw`mt-1 text-xl font-medium text-gray-900`}
-  9
+    ${tw`mt-2 text-xl font-medium text-gray-900`}
+  }
+  .phone {
+    ${tw`mt-1 text-center text-sm text-gray-600`}
+  }
+  .email {
+    ${tw`mt-1 text-center text-xs text-gray-500`}
+  }
+  .city {
+    ${tw`mt-1 text-center text-xs text-gray-400`}
+  }
 `
 
 const CardLinks = styled.div`
@@ -71,26 +80,20 @@ export default ({
   subheading = "Our Team",
   description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   submitButtonText = "Update Profile",
-  cards = [
+  links = [
     {
-      links: [
-        {
-          url: "https://twitter.com",
-          icon: TwitterIcon,
-        },
-        {
-          url: "https://linkedin.com",
-          icon: LinkedinIcon,
-        },
-        {
-          url: "https://github.com",
-          icon: GithubIcon,
-        },
-      ],
-    }
+      url: "https://twitter.com",
+      icon: TwitterIcon,
+    },
+    {
+      url: "https://linkedin.com",
+      icon: LinkedinIcon,
+    },
+    {
+      url: "https://github.com",
+      icon: GithubIcon,
+    },
   ],
-  formAction = "#",
-  formMethod = "get",
   textOnLeft = false,
 }) => {
   const { uid } = useParams();
@@ -136,7 +139,6 @@ export default ({
           } else if (response.status === 401) {
             setError("You are not authenticated")
           } else if (response.status === 500) {
-            console.log(response)
             const data = await response.json()
             if (data.message) setError(data.message || genericErrorMessage)
           } else {
@@ -175,11 +177,11 @@ export default ({
         setRole(data.role)
         setBio(data.bio)
         setPhoto(data.photo)
+        setCity(data.city)
         if (uid === undefined) {
           setUsername(data.username)
           setEmail(data.email)
           setPhone(getFormattedPhoneNumber(data.phone))
-          setCity(data.city)
           setUserContext(oldValues => {
             return { ...oldValues, details: data }
           })
@@ -226,30 +228,30 @@ export default ({
       {loaderror == "" &&
         <TwoColumn>
           <Cards>
-            {cards.map((card, index) => (
-              <Card key={index}>
-                <CardImage imageSrc={photo} />
-                <CardContent>
-                  <span className="position">{role == "user" ? "Patron" : "Owner"}</span>
-                  <span className="name">{firstName + " " + lastName}</span>
-                  <span className="bio">{bio}</span>
-                  <CardLinks>
-                    {card.links.map((link, linkIndex) => (
-                      <a key={linkIndex} className="link" href={link.url}>
-                        <link.icon className="icon" />
-                      </a>
-                    ))}
-                  </CardLinks>
-                </CardContent>
-              </Card>
-            ))}
+            <Card>
+              <CardImage imageSrc={photo} />
+              <CardContent>
+                <span className="position">{role == "user" ? "Patron" : "Owner"}</span>
+                <span className="name">{firstName + " " + lastName}</span>
+                <span className="bio">{bio}</span>
+                <span className="phone">{getFormattedPhoneNumber(phone)}</span>
+                <span className="email">{email}</span>
+                <span className="city">{city}</span>
+                <CardLinks>
+                  {links.map((link, linkIndex) => (
+                    <a key={linkIndex} className="link" href={link.url}>
+                      <link.icon className="icon" />
+                    </a>
+                  ))}
+                </CardLinks>
+
+                {status && <p tw="mt-6 text-sm text-green-500 text-center">{status}</p>}
+              </CardContent>
+            </Card>
           </Cards>
-          {userContext.token != null &&
+          {userContext.token && uid == undefined &&
             <TextColumn textOnLeft={textOnLeft}>
               <TextContent>
-                {/* {subheading && <Subheading>{subheading}</Subheading>}
-            <Heading>{heading}</Heading>
-            {description && <Description>{description}</Description>} */}
                 <Form onSubmit={formSubmitHandler}>
                   <Label htmlFor="firstName">First Name</Label>
                   <Input
@@ -309,15 +311,14 @@ export default ({
                     <option selected={city == "Miami" ? true : false} value="Miami">Miami</option>
                   </Select>
 
-                  <Label htmlFor="role">Role</Label>
+                  {/* <Label htmlFor="role">Role</Label>
                   <Select name="role" onChange={e => setRole(e.target.value)}>
                     <option selected={role == "user" ? true : false} value="user">Patron</option>
                     <option selected={role == "admin" ? true : false} value="admin">Owner</option>
-                  </Select>
+                  </Select> */}
                   <SubmitButton disabled={isSubmitting} type="submit">
                     <span className="text">{`${isSubmitting ? "Updating Profile" : "Update Profile"}`}</span>
                   </SubmitButton>
-                  {status && <p tw="mt-6 text-sm text-green-500 text-center">{status}</p>}
                   {error && <p tw="mt-6 text-xs text-red-500 text-center">{error}</p>}
                 </Form>
               </TextContent>

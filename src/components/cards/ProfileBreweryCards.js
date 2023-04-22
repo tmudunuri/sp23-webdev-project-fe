@@ -81,11 +81,16 @@ export default ({
     const [role, setRole] = useState([]);
 
     const breweriesData = {
-        Liked: getRandomCards(likedBreweries),
-        Disliked: getRandomCards(dislikedBreweries),
-        Visited: getRandomCards(visitedBreweries),
-        Owned: getRandomCards(ownedBreweries)
     }
+    if (role == 'admin' || ownedBreweries.length > 0) {
+        breweriesData.Owned = getRandomCards(ownedBreweries)
+    }
+    else {
+        breweriesData.Liked = getRandomCards(likedBreweries)
+        breweriesData.Disliked = getRandomCards(dislikedBreweries)
+        breweriesData.Visited = getRandomCards(visitedBreweries)
+    }
+
     const tabsKeys = Object.keys(breweriesData);
     const [activeTab, setActiveTab] = useState(tabsKeys[0]);
     const [error, setError] = useState("")
@@ -205,11 +210,17 @@ export default ({
         if (!userContext.details && userContext.token) {
             fetchUserDetails()
         }
+        if (role == 'admin' || ownedBreweries.length > 0) {
+            setActiveTab("Owned")
+        }
     })
 
     useEffect(() => {
         if (uid != undefined) {
             fetchUserDetails()
+        }
+        if (role == 'admin' || ownedBreweries.length > 0) {
+            setActiveTab("Owned")
         }
     }, [])
 
