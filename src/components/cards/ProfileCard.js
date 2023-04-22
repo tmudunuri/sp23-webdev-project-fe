@@ -11,6 +11,8 @@ import { ReactComponent as TwitterIcon } from "images/twitter-icon.svg";
 import { ReactComponent as LinkedinIcon } from "images/linkedin-icon.svg";
 import { ReactComponent as GithubIcon } from "images/github-icon.svg";
 
+import { getFormattedPhoneNumber } from "helpers/dataUtil";
+
 import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 
 const HeadingContainer = tw.div``
@@ -71,9 +73,6 @@ export default ({
   submitButtonText = "Update Profile",
   cards = [
     {
-      imageSrc: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&fit=facearea&facepad=2.95&w=512&h=512&q=80",
-      position: "Founder",
-      name: "Adam Cuppy",
       links: [
         {
           url: "https://twitter.com",
@@ -111,7 +110,6 @@ export default ({
   const [role, setRole] = useState("")
   const [bio, setBio] = useState("")
   const [photo, setPhoto] = useState("")
-
 
   const formSubmitHandler = e => {
     e.preventDefault()
@@ -211,13 +209,11 @@ export default ({
     }
   }, [userContext.details, fetchUserDetails])
 
-  // const refetchHandler = () => {
-  //   // set details to undefined so that spinner will be displayed and
-  //   //  fetchUserDetails will be invoked from useEffect
-  //   setUserContext(oldValues => {
-  //     return { ...oldValues, details: undefined }
-  //   })
-  // }
+  useEffect(() => {
+    if (uid != undefined) {
+      fetchUserDetails()
+    }
+  })
 
   return (
     <Container>
@@ -248,7 +244,7 @@ export default ({
               </Card>
             ))}
           </Cards>
-          {userContext.details != null &&
+          {userContext.token != null &&
             <TextColumn textOnLeft={textOnLeft}>
               <TextContent>
                 {/* {subheading && <Subheading>{subheading}</Subheading>}
@@ -259,14 +255,14 @@ export default ({
                   <Input
                     type="string"
                     name="firstName"
-                    placeholder={userContext.details.firstName || "Your First Name"}
+                    placeholder={"Your First Name"}
                     value={firstName}
                     onChange={e => setFirstName(e.target.value)} />
                   <Label htmlFor="lastName">Last Name</Label>
                   <Input
                     type="string"
                     name="lastName"
-                    placeholder={userContext.details.lastName || "Your Last Name"}
+                    placeholder={"Your Last Name"}
                     value={lastName}
                     onChange={e => setLastName(e.target.value)} />
 
@@ -275,7 +271,7 @@ export default ({
                     type="string"
                     name="username"
                     disabled={true}
-                    placeholder={userContext.details.username || "Your Username"}
+                    placeholder={"Your Username"}
                     value={username}
                     onChange={e => setUsername(e.target.value)} />
 
@@ -283,7 +279,7 @@ export default ({
                   <Input
                     type="email"
                     name="email"
-                    placeholder={userContext.details.email || "Your Email"}
+                    placeholder={"Your Email"}
                     value={email}
                     onChange={e => setEmail(e.target.value)} />
 
@@ -291,7 +287,7 @@ export default ({
                   <Input
                     type="tel"
                     name="phone"
-                    placeholder={getFormattedPhoneNumber(userContext.details.phone) || "Your Phone (XXX-XXX-XXXX)"}
+                    placeholder={"Your Phone (XXX-XXX-XXXX)"}
                     value={phone}
                     onChange={e => setPhone(e.target.value)} />
 
@@ -299,7 +295,7 @@ export default ({
                   <Textarea
                     type="string"
                     name="bio"
-                    placeholder={userContext.details.bio || "Your Bio Here"}
+                    placeholder={"Your Bio Here"}
                     value={bio}
                     onChange={e => setBio(e.target.value)} />
 
@@ -318,24 +314,6 @@ export default ({
                     <option selected={role == "user" ? true : false} value="user">Patron</option>
                     <option selected={role == "admin" ? true : false} value="admin">Owner</option>
                   </Select>
-
-                  {/* <Label htmlFor="user">Patron</Label>
-                <RadioInput
-                  type="radio"
-                  name="role"
-                  value="user"
-                  id="user"
-                  checked={role == "user" ? true : false}
-                  onClick={e => setRole(e.target.value)} />
-
-                <Label htmlFor="admin">Owner</Label>
-                <RadioInput
-                  type="radio"
-                  name="role"
-                  value="admin"
-                  id="admin"
-                  checked={role == "user" ? false : true}
-                  onClick={e => setRole(e.target.value)} /> */}
                   <SubmitButton disabled={isSubmitting} type="submit">
                     <span className="text">{`${isSubmitting ? "Updating Profile" : "Update Profile"}`}</span>
                   </SubmitButton>
@@ -349,14 +327,4 @@ export default ({
       }
     </Container>
   );
-};
-
-const getFormattedPhoneNumber = (phone) => {
-  var cleaned = ('' + phone).replace(/\D/g, '');
-  var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-  if (match) {
-    var intlCode = match[1] ? '+1 ' : '';
-    return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-  }
-  return null;
 };

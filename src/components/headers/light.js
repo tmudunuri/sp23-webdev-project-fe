@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -62,6 +62,7 @@ export const DesktopNavLinks = tw.nav`
 export default ({ roundedHeaderButton = false, logoLink, links, className, collapseBreakpointClass = "lg" }) => {
 
   const [userContext, setUserContext] = useContext(UserContext)
+  const navigate = useNavigate();
 
   const logoutHandler = () => {
     fetch(process.env.REACT_APP_API_ENDPOINT + "users/logout", {
@@ -75,6 +76,7 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
         return { ...oldValues, details: undefined, token: null }
       })
       window.localStorage.setItem("logout", Date.now())
+      navigate('/login');
     })
   }
   /*
@@ -93,9 +95,9 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
   const defaultLinks = [
     <NavLinks key={1}>
       {/* <Link to="/"> */}
-        <NavLink href="/"  tw="lg:ml-12!">
-          Home
-        </NavLink>
+      <NavLink href="/" tw="lg:ml-12!">
+        Home
+      </NavLink>
       {/* </Link> */}
       <Link to="/search">
         <NavLink tw="lg:ml-12!">
@@ -108,9 +110,9 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
       <NavLink href="/#">Contact Us</NavLink> */}
       {userContext.token !== null &&
         // <Link>
-          <NavLink href="/profile" tw="lg:ml-12!">
-            Profile
-          </NavLink>
+        <NavLink href="/profile" tw="lg:ml-12!">
+          Profile
+        </NavLink>
         // </Link>
       }
       {userContext.token !== null &&
@@ -139,7 +141,7 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
   const defaultLogoLink = (
     <LogoLink href="/">
       <img src={logo} alt="logo" />
-      BreweryHub
+      Brewlicious
     </LogoLink>
   );
 

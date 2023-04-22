@@ -223,18 +223,19 @@ export default ({
                 <Row>
                     <TextColumn textOnLeft={false}>
 
-                        {userContext.token != null &&
+                        {userRole == 'user' &&
                             <FormContainer>
                                 <Form onSubmit={formSubmitHandler} >
                                     <Input
                                         type="string"
                                         placeholder="Title"
+                                        required={true}
                                         value={title}
                                         onChange={e => setTitle(e.target.value)} />
                                     <Textarea
                                         type="string"
-                                        name="bio"
-                                        placeholder={"Your Review"}
+                                        placeholder="Your Review"
+                                        required={true}
                                         value={review}
                                         onChange={e => setReview(e.target.value)} />
                                     <Label htmlFor="rating">{"Rating: " + rating}</Label>

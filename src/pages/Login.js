@@ -60,9 +60,9 @@ const IllustrationImage = styled.div`
 `;
 
 export default ({
-  logoLinkUrl = "#",
+  logoLinkUrl = "/",
   illustrationImageSrc = illustration,
-  headingText = "Sign In To BreweryHub",
+  headingText = "Sign In To Brewlicious",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
@@ -126,15 +126,21 @@ export default ({
       })
   }
 
+  if (userContext.token != null) {
+    navigate('/');
+  }
+
   return (
     <>
       <AnimationRevealPage>
         <Container>
           <Content>
             <MainContainer>
-              <LogoLink href={logoLinkUrl}>
-                <LogoImage src={logo} />
-              </LogoLink>
+              <Link to={logoLinkUrl}>
+                <LogoLink href={logoLinkUrl}>
+                  <LogoImage src={logo} />
+                </LogoLink>
+              </Link>
               <MainContent>
                 <Heading>{headingText}</Heading>
                 <FormContainer>

@@ -22,6 +22,7 @@ import { ReactComponent as ReviewsIcon } from "feather-icons/dist/icons/message-
 import { ReactComponent as VisitsIcon } from "feather-icons/dist/icons/check-circle.svg";
 
 import { breweryImages } from "helpers/imageSources";
+import { getFormattedPhoneNumber } from "helpers/dataUtil";
 
 
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
@@ -264,6 +265,12 @@ export default ({ textOnLeft = false }) => {
         fetchBreweryStats();
     }, [liked, disliked, visited])
 
+    useEffect(() => {
+        if (userContext.token != null) {
+            fetchBreweryStats();
+        }
+    })
+
     return (
         <AnimationRevealPage>
             <Header />
@@ -395,14 +402,4 @@ export default ({ textOnLeft = false }) => {
 
 const handleDirections = (latitude, longitude) => {
     return `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
-};
-
-const getFormattedPhoneNumber = (phone) => {
-    var cleaned = ('' + phone).replace(/\D/g, '');
-    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-        var intlCode = match[1] ? '+1 ' : '';
-        return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-    }
-    return null;
 };

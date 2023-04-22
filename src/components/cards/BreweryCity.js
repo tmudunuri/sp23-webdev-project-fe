@@ -15,6 +15,7 @@ import { ReactComponent as PhoneIcon } from "feather-icons/dist/icons/phone.svg"
 import { ReactComponent as MapIcon } from "feather-icons/dist/icons/map.svg";
 
 import { breweryImages } from "helpers/imageSources";
+import { getFormattedPhoneNumber } from "helpers/dataUtil";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-16 lg:py-20`;
@@ -224,20 +225,3 @@ export default () => {
 const handleDirections = (latitude, longitude) => {
     return `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
 };
-
-const getFormattedPhoneNumber = (phone) => {
-    var cleaned = ('' + phone).replace(/\D/g, '');
-    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-        var intlCode = match[1] ? '+1 ' : '';
-        return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-    }
-    return null;
-};
-
-const handlePhone = (phone) => {
-    const telephoneNumber = getFormattedPhoneNumber(phone);
-    const url = 'tel:' + telephoneNumber;
-    window.open(url, '_blank');
-};
-

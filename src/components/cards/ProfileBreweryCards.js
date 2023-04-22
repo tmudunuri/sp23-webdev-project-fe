@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useEffect, useContext } from "react";
+import { Link, useParams } from "react-router-dom";
 import { UserContext } from "../../context/UserContext"
-import { Link } from "react-router-dom";
+
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -11,6 +12,8 @@ import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import { ReactComponent as StarIcon } from "images/star-icon.svg";
 
 import { breweryImages } from "helpers/imageSources";
+import { getFormattedPhoneNumber } from "helpers/dataUtil";
+import { getRandomCards } from "helpers/dataUtil";
 
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
@@ -66,11 +69,7 @@ const DecoratorBlob2 = styled(SvgDecoratorBlob2)`
 export default ({
     heading = "Checkout the Menu",
 }) => {
-    /*
-     * To customize the tabs, pass in data using the `tabs` prop. It should be an object which contains the name of the tab
-     * as the key and value of the key will be its content (as an array of objects).
-     * To see what attributes are configurable of each object inside this array see the example above for "Starters".
-     */
+    const { uid } = useParams();
 
     const [userContext, setUserContext] = useContext(UserContext);
 
@@ -92,7 +91,7 @@ export default ({
     const [error, setError] = useState("")
 
     const fetchUserDetails = useCallback(() => {
-        let endpoint = "users/profile";
+        let endpoint = uid == undefined ? "users/profile" : "users/profile/" + uid;
         fetch(process.env.REACT_APP_API_ENDPOINT + endpoint, {
             method: "GET",
             credentials: "include",
@@ -208,6 +207,12 @@ export default ({
         }
     })
 
+    useEffect(() => {
+        if (uid != undefined) {
+            fetchUserDetails()
+        }
+    }, [])
+
     return (
         <Container>
             <ContentWithPaddingXl>
@@ -285,19 +290,4 @@ export default ({
             <DecoratorBlob2 />
         </Container>
     );
-};
-
-const getRandomCards = (cards) => {
-    // Shuffle array
-    return cards.sort(() => Math.random() - 0.5);
-};
-
-const getFormattedPhoneNumber = (phone) => {
-    var cleaned = ('' + phone).replace(/\D/g, '');
-    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-        var intlCode = match[1] ? '+1 ' : '';
-        return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-    }
-    return null;
 };

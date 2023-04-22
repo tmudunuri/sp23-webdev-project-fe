@@ -13,6 +13,7 @@ import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7
 import DesignIllustration from "../../images/design-illustration-2.svg";
 
 import { breweryImages } from "helpers/imageSources";
+import { getFormattedPhoneNumber } from "helpers/dataUtil";
 
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Header = tw(SectionHeading)``;
@@ -258,19 +259,4 @@ export default ({
             <DecoratorBlob2 />
         </Container >
     );
-};
-
-const getRandomCards = (cards) => {
-    // Shuffle array
-    return cards.sort(() => Math.random() - 0.5);
-};
-
-const getFormattedPhoneNumber = (phone) => {
-    var cleaned = ('' + phone).replace(/\D/g, '');
-    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-        var intlCode = match[1] ? '+1 ' : '';
-        return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
-    }
-    return null;
 };
