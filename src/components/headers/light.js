@@ -99,6 +99,11 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
         Home
       </NavLink>
       {/* </Link> */}
+      <Link to="/about">
+        <NavLink tw="lg:ml-12!">
+          About
+        </NavLink>
+      </Link>
       <Link to="/search">
         <NavLink tw="lg:ml-12!">
           Search

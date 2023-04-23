@@ -94,6 +94,7 @@ import RestaurantLandingPage from "demos/RestaurantLandingPage.js";
 import LoginPage from "pages/Login.js";
 import SignupPage from "pages/Signup.js";
 import ProfilePage from "pages/Profile.js";
+import AboutPage from "pages/AboutPage";
 // import PricingPage from "pages/Pricing.js";
 // import AboutUsPage from "pages/AboutUs.js";
 // import ContactUsPage from "pages/ContactUs.js";
@@ -158,6 +159,7 @@ export default function App() {
           <Route path="/profile/:uid" element={<ProfilePage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/brewery/:bid" element={<BreweryPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </Router>
     </>

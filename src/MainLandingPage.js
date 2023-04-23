@@ -100,14 +100,6 @@ export default ({
   heading = "Free Modern React Templates for every need.",
   description = "Easily customizable modern React UI Templates and Components built using TailwindCSS which are also lightweight and simple to setup. All components are modular and fully responsive for great mobile experience as well as big desktop screens.  Brand Colors are also fully customizable. Free for personal as well as commercial use."
 }) => {
-  /*
-   * Using gtag like this because we only want to use Google Analytics when Main Landing Page is rendered
-   * Remove this part and the the gtag script inside public/index.html if you dont need google analytics
-   */
-  useEffect(() => {
-    window.gtag("js", new Date());
-    window.gtag("config", "UA-45799926-9");
-  }, [])
 
   const previewImageAnimationVariants = {
     rest: {
