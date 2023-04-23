@@ -86,7 +86,6 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 // import HotelTravelLandingPage from "demos/HotelTravelLandingPage.js";
 // import AgencyLandingPage from "demos/AgencyLandingPage.js";
 // import SaaSProductLandingPage from "demos/SaaSProductLandingPage.js";
-import RestaurantLandingPage from "demos/RestaurantLandingPage.js";
 // import ServiceLandingPage from "demos/ServiceLandingPage.js";
 // import HostingCloudLandingPage from "demos/HostingCloudLandingPage.js";
 
@@ -102,12 +101,8 @@ import AboutPage from "pages/AboutPage";
 // import TermsOfServicePage from "pages/TermsOfService.js";
 // import PrivacyPolicyPage from "pages/PrivacyPolicy.js";
 
-import ComponentRenderer from "ComponentRenderer.js";
-import MainLandingPage from "MainLandingPage.js";
-import ThankYouPage from "ThankYouPage.js";
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useCallback, useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect } from "react"
 import { UserContext } from "./context/UserContext"
 import HomePage from "pages/HomePage";
 import SearchPage from "pages/SearchPage";
@@ -116,6 +111,7 @@ import BreweryPage from "components/cards/BreweryPage";
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
   // return <AnimationRevealPage disabled>xxxxxxxxxx</AnimationRevealPage>;
+  // eslint-disable-next-line
   const [userContext, setUserContext] = useContext(UserContext);
 
   const verifyUser = useCallback(() => {
@@ -148,11 +144,8 @@ export default function App() {
       <GlobalStyles />
       <Router>
         <Routes>
-          <Route path="/components/:type/:subtype/:name" element={<ComponentRenderer />} />
-          <Route path="/components/:type/:name" element={<ComponentRenderer />} />
-          <Route path="/thank-you" element={<ThankYouPage />} />
-          <Route path="/doc" element={<MainLandingPage />} />
           <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<SignupPage />} />
           <Route path="/profile" element={<ProfilePage />} />

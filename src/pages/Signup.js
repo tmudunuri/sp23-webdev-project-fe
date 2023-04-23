@@ -24,7 +24,9 @@ const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold`;
 const FormContainer = tw.div`w-full flex-1 mt-8`;
 const Label = tw.label`text-center font-medium text-sm`;
 
+// eslint-disable-next-line
 const SocialButtonsContainer = tw.div`flex flex-col items-center`;
+// eslint-disable-next-line
 const SocialButton = styled.a`
   ${tw`w-full max-w-xs font-semibold rounded-lg py-3 border text-gray-900 bg-gray-100 hocus:bg-gray-200 hocus:border-gray-400 flex items-center justify-center transition-all duration-300 focus:outline-none focus:shadow-outline text-sm mt-5 first:mt-0`}
   .iconContainer {
@@ -38,7 +40,9 @@ const SocialButton = styled.a`
   }
 `;
 
+// eslint-disable-next-line
 const DividerTextContainer = tw.div`my-12 border-b text-center relative`;
+// eslint-disable-next-line
 const DividerText = tw.div`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform -translate-y-1/2 absolute inset-x-0 top-1/2 bg-transparent`;
 
 const Form = tw.form`mx-auto max-w-xs`;
@@ -88,6 +92,7 @@ export default ({
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [role, setRole] = useState("user")
+  // eslint-disable-next-line
   const [photo, setPhoto] = useState(profileImages[Math.floor(Math.random() * profileImages.length)])
   const [userContext, setUserContext] = useContext(UserContext)
 
@@ -210,8 +215,8 @@ export default ({
                       <span className="text">{`${isSubmitting ? "Signing Up" : "Sign Up"}`}</span>
                     </SubmitButton>
                     {error && <p tw="mt-6 text-xs text-red-500 text-center">{error}</p>}
-                    {/* <p tw="mt-6 text-xs text-gray-600 text-center">
-                      I agree to abide by treact's{" "}
+                    <p tw="mt-6 text-xs text-gray-600 text-center">
+                      I'm over 21 years old and I agree to abide by Brewlicious's{" "}
                       <a href={tosUrl} tw="border-b border-gray-500 border-dotted">
                         Terms of Service
                       </a>{" "}
@@ -219,8 +224,7 @@ export default ({
                       <a href={privacyPolicyUrl} tw="border-b border-gray-500 border-dotted">
                         Privacy Policy
                       </a>
-                    </p> */}
-
+                    </p>
                     <p tw="mt-8 text-sm text-gray-600 text-center">
                       Already have an account?{" "}
                       <Link to={signInUrl} tw="border-b border-gray-500 border-dotted">
