@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -95,11 +95,6 @@ const IllustrationContainer = tw.div`flex justify-center lg:justify-end items-ce
 export default ({
     heading = "Checkout the Menu",
 }) => {
-    /*
-     * To customize the tabs, pass in data using the `tabs` prop. It should be an object which contains the name of the tab
-     * as the key and value of the key will be its content (as an array of objects).
-     * To see what attributes are configurable of each object inside this array see the example above for "Starters".
-     */
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState(searchParams.get("query"));
@@ -112,11 +107,24 @@ export default ({
 
     const tabsKeys = Object.keys(breweriesData);
     const [activeTab, setActiveTab] = useState(tabsKeys[0]);
+    const navigate = useNavigate();
 
     const searchSubmitHandler = e => {
         e.preventDefault()
         setIsSubmitting(true)
         setError("")
+
+
+        // Replace query string in URL
+        const params = {
+            query: searchQuery || '',
+        };
+        const options = {
+            pathname: '/search',
+            search: `?${createSearchParams(params)}`,
+        };
+        navigate(options, { replace: true });
+
 
         const endpoint = "/search?query=" + searchQuery + "&per_page=12";
         fetch("https://api.openbrewerydb.org/v1/breweries" + endpoint, {

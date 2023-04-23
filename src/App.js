@@ -107,6 +107,7 @@ import { UserContext } from "./context/UserContext"
 import HomePage from "pages/HomePage";
 import SearchPage from "pages/SearchPage";
 import BreweryPage from "components/cards/BreweryPage";
+import NotFoundPage from "pages/NotFoundPage";
 
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
@@ -148,11 +149,14 @@ export default function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<SignupPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          {userContext.token &&
+            <Route path="/profile" element={<ProfilePage />} />
+          }
           <Route path="/profile/:uid" element={<ProfilePage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/brewery/:bid" element={<BreweryPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </Router>
     </>
