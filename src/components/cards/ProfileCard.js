@@ -149,6 +149,7 @@ export default ({
           setUserContext(oldValues => {
             return { ...oldValues, token: data.token }
           })
+          window.location.reload()
           setStatus("Profile Updated")
         }
       })
@@ -215,6 +216,17 @@ export default ({
     if (uid != undefined) {
       fetchUserDetails()
     }
+  })
+
+  // Navigate out for anonymous users
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (uid == undefined && !userContext.details) {
+        navigate('/login')
+        console.log(userContext)
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
   })
 
   return (
